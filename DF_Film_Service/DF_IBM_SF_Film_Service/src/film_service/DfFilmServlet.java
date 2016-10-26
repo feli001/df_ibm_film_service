@@ -38,7 +38,13 @@ public class DfFilmServlet extends HttpServlet {
 		try{
 			JSONArray jsonInput = new JSONArray(readString);
 			String[] properties = {"locations","title"};
-			JSONArray jsonOutput = reduceProperties(jsonInput, properties);
+
+			String titleQuery = request.getParameter("title");
+			if(titleQuery == null){
+				titleQuery = "";
+			}
+
+			JSONArray jsonOutput = reduceProperties(jsonInput, titleQuery, properties);
 			outputString = jsonOutput.toString();
 			
 		}catch(JSONException e){
@@ -59,7 +65,7 @@ public class DfFilmServlet extends HttpServlet {
 	 * @param url URL from which to read
 	 * @return String read from the URL
 	 */
-	private String readStringFromURL(URL url){
+	protected String readStringFromURL(URL url){
 		BufferedReader reader = null;
 		try{
 			reader = new BufferedReader(new InputStreamReader(url.openStream()));
@@ -87,16 +93,21 @@ public class DfFilmServlet extends HttpServlet {
 	/**
 	 * Reduces the JSONArray to contain only the desired properties
 	 * @param inputArray A JSONArray
+	 * @param titleQuery A String which should be contained in the title
 	 * @param properties A String Array listing all the desired properties, which should not be removed from the array.
 	 * @return Returns a JSONArray containing only the required properties
 	 */
-	public JSONArray reduceProperties(JSONArray inputArray, String... properties ){
+	protected JSONArray reduceProperties(JSONArray inputArray, String titleQuery, String... properties ){
 		JSONArray result = new JSONArray();
 		if(inputArray != null){
 			for(int i = 0; i < inputArray.length(); i++){
 				JSONObject obj;
 				try {
 					obj = inputArray.getJSONObject(i);
+					String title = (String) obj.get("title");
+					if(!titleQuery.isEmpty() && !title.toLowerCase().contains(titleQuery.toLowerCase())){
+						continue;
+					}
 					Iterator keyIterator = obj.keys();
 					while(keyIterator.hasNext()){
 						String key = (String)keyIterator.next();
