@@ -2,7 +2,6 @@ package film_service;
 
 import java.io.PrintWriter;
 import java.io.StringWriter;
-import java.net.URL;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;

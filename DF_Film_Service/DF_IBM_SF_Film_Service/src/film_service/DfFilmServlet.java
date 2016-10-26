@@ -111,7 +111,6 @@ public class DfFilmServlet extends HttpServlet {
 					Iterator keyIterator = obj.keys();
 					while(keyIterator.hasNext()){
 						String key = (String)keyIterator.next();
-						boolean toDelete = true;
 						if(!Arrays.asList(properties).contains(key)){
 							keyIterator.remove();
 						}
